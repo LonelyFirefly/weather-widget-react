@@ -1,37 +1,38 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-
-const githubURL = "https://api.github.com/users/LonelyFirefly";
+import { useState } from "react";
+import "./App.css";
+import { Search } from "./Components/Search";
+import { Weather } from "./Components/Weather";
+import { Location } from "./Components/Location";
+import { Temperature } from "./Components/Temperature";
+import { Description } from "./Components/Description";
 
 export default function App() {
-	const [userData, setUserData] = useState({});
-
-	useEffect(() => {
-		getGithubUserWithAxios();
-	}, []);
-
-	const getGithubUserWithFetch = async () => {
-		const response = await fetch(githubURL);
-		const jsonData = await response.json();
-		setUserData(jsonData);
-	};
-	const getGithubUserWithAxios = async () => {
-		const response = await axios.get(githubURL);
-		setUserData(response.data);
-		console.log(response);
-	};
+	const [weather, setWeather] = useState({});
+	const [query, setQuery] = useState("");
 
 	return (
-		<div className="App">
-			<header className="App-header">
-				<h2>GitHub User Data</h2>
-			</header>
-			<div className="user-container">
-				<h5 className="info-item">{userData.name}</h5>
-				<h5 className="info-item">{userData.location}</h5>
-				<h5 className="info-item">{userData.blog}</h5>
-				<h5 className="info-item">{userData.company}</h5>
-			</div>
-		</div>
+		<main
+			className={
+				typeof weather.main != "undefined"
+					? weather.main.temp > 16
+						? "app warm"
+						: "app"
+					: "app"
+			}>
+			<Search
+				query={query}
+				handleWeather={setWeather}
+				handleQuery={setQuery}
+			/>
+			{typeof weather.main !== "undefined" && (
+				<>
+					<Weather>
+						<Location data={weather} />
+						<Temperature data={weather} />
+						<Description data={weather} />
+					</Weather>
+				</>
+			)}
+		</main>
 	);
 }
