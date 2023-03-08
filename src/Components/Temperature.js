@@ -1,3 +1,3 @@
-export function Temperature({ data }) {
-	return <div className="weather__temp">{Math.round(data.main.temp)}°c</div>;
+export function Temperature({ temperature }) {
+	return <div className="weather__temp">{Math.round(temperature)}°c</div>;
 }

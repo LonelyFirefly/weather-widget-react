@@ -8,28 +8,26 @@ import { Description } from "./Components/Description";
 
 export default function App() {
 	const [weather, setWeather] = useState({});
-	const [query, setQuery] = useState("");
 
 	return (
 		<main
 			className={
-				typeof weather.main != "undefined"
-					? weather.main.temp > 16
-						? "app warm"
-						: "app"
+				typeof weather.main !== "undefined" && weather.main.temp > 16
+					? "app warm"
 					: "app"
 			}>
-			<Search
-				query={query}
-				handleWeather={setWeather}
-				handleQuery={setQuery}
-			/>
+			<Search handleWeather={setWeather} />
 			{typeof weather.main !== "undefined" && (
 				<>
 					<Weather>
-						<Location data={weather} />
-						<Temperature data={weather} />
-						<Description data={weather} />
+						<Location
+							city={weather.name}
+							country={weather.sys.country}
+						/>
+						<Temperature temperature={weather.main.temp} />
+						<Description
+							description={weather.weather[0].description}
+						/>
 					</Weather>
 				</>
 			)}

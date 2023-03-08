@@ -1,8 +1,10 @@
+import { useState } from "react";
 import "../App.css";
 
-export function Search({ query, handleWeather, handleQuery }) {
-	function handleSubmit(e) {
-		e.preventDefault();
+export function Search({ handleWeather }) {
+	const [query, setQuery] = useState("");
+
+	function fetchWeatherData() {
 		fetch(
 			`${process.env.REACT_APP_API_URL}weather?q=${query}&appid=${process.env.REACT_APP_API_KEY}&units=metric`
 		)
@@ -13,9 +15,17 @@ export function Search({ query, handleWeather, handleQuery }) {
 				if (result.message === "city not found") {
 					alert("Enter valid city");
 				} else {
-					handleQuery("");
+					setQuery("");
 				}
+			})
+			.catch((err) => {
+				throw new Error("Enter valie city");
 			});
+	}
+
+	function handleSubmit(e) {
+		e.preventDefault();
+		fetchWeatherData();
 	}
 
 	return (
@@ -25,7 +35,7 @@ export function Search({ query, handleWeather, handleQuery }) {
 				className="search__search-bar"
 				placeholder="Search..."
 				value={query}
-				onChange={(e) => handleQuery(e.target.value)}
+				onChange={(e) => setQuery(e.target.value)}
 			/>
 			<button className="search__button" onClick={handleSubmit}>
 				Search

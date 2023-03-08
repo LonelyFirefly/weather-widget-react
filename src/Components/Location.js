@@ -1,8 +1,7 @@
-export function Location({ data }) {
+export function Location({ city, location }) {
 	return (
 		<div className="weather__location">
-			{" "}
-			{data.name}, {data.sys.country}{" "}
+			{city}, {location}
 		</div>
 	);
 }
