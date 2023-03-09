@@ -1,35 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import { Search } from "./Components/Search";
 import { Weather } from "./Components/Weather";
 import { Location } from "./Components/Location";
 import { Temperature } from "./Components/Temperature";
 import { Description } from "./Components/Description";
+import { WeatherCard } from "./Components/WeatherCard";
+import { getNecessaryWeatherData } from "./assets/getNecessaryWeatherData";
+import { getMainThemeClassName } from "./assets/getMainThemeClassName";
 
 export default function App() {
-	const [weather, setWeather] = useState({});
+	const [weather, setWeather] = useState();
+	const [error, setError] = useState(null);
+	const [isFetched, setIsFetched] = useState(false);
+
+	let weatherData = getNecessaryWeatherData(weather);
+	let { city, temp, description, country } =
+		isFetched && !error ? weatherData : "";
+	let mainThemeClassName = getMainThemeClassName(temp);
 
 	return (
-		<main
-			className={
-				typeof weather.main !== "undefined" && weather.main.temp > 16
-					? "app warm"
-					: "app"
-			}>
-			<Search handleWeather={setWeather} />
-			{typeof weather.main !== "undefined" && (
-				<>
-					<Weather>
-						<Location
-							city={weather.name}
-							country={weather.sys.country}
-						/>
-						<Temperature temperature={weather.main.temp} />
-						<Description
-							description={weather.weather[0].description}
-						/>
-					</Weather>
-				</>
+		<main className={mainThemeClassName}>
+			<Search
+				handleWeather={setWeather}
+				handleError={setError}
+				handleIsFetched={setIsFetched}
+			/>
+			{isFetched && !error && (
+				<Weather>
+					<Location city={city} country={country} />
+					<Temperature temperature={temp} />
+					<Description description={description} />
+				</Weather>
 			)}
 		</main>
 	);
