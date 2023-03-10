@@ -10,7 +10,6 @@ export function getNecessaryWeatherData(fetchedData) {
 		let neededWeatherData = { city, temp, description, country };
 		return neededWeatherData;
 	} catch (error) {
-		alert("Enter a valid city name");
 		return;
 	}
 }

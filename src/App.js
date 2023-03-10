@@ -33,6 +33,9 @@ export default function App() {
 						description={description}></WeatherCard>
 				</Weather>
 			)}
+			{error && (
+				<h1 className="error-message">Enter a valid city name</h1>
+			)}
 		</main>
 	);
 }
