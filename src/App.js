@@ -1,10 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
 import { Search } from "./Components/Search";
 import { Weather } from "./Components/Weather";
-import { Location } from "./Components/Location";
-import { Temperature } from "./Components/Temperature";
-import { Description } from "./Components/Description";
+
 import { WeatherCard } from "./Components/WeatherCard";
 import { getNecessaryWeatherData } from "./assets/getNecessaryWeatherData";
 import { getMainThemeClassName } from "./assets/getMainThemeClassName";
@@ -22,15 +20,17 @@ export default function App() {
 	return (
 		<main className={mainThemeClassName}>
 			<Search
-				handleWeather={setWeather}
-				handleError={setError}
-				handleIsFetched={setIsFetched}
+				onWeather={setWeather}
+				onError={setError}
+				onIsFetched={setIsFetched}
 			/>
 			{isFetched && !error && (
 				<Weather>
-					<Location city={city} country={country} />
-					<Temperature temperature={temp} />
-					<Description description={description} />
+					<WeatherCard
+						city={city}
+						country={country}
+						temp={temp}
+						description={description}></WeatherCard>
 				</Weather>
 			)}
 		</main>

@@ -1,59 +1,66 @@
 import { useState } from "react";
 import "../App.css";
 
-export function Search({ handleWeather, handleError, handleIsFetched }) {
+export function Search({ onWeather, onError, onIsFetched }) {
 	const [query, setQuery] = useState("");
 	const [isPending, setIsPending] = useState(false);
+	const url = `${process.env.REACT_APP_API_URL}weather?q=${query}&appid=${process.env.REACT_APP_API_KEY}&units=metric`;
+
+	function handleWeatherData() {
+		setIsPending(true);
+		let response = fetchWeatherData();
+		handleResponse(response);
+	}
 
 	function fetchWeatherData() {
-		setIsPending(true);
-		fetch(
-			`${process.env.REACT_APP_API_URL}weather?q=${query}&appid=${process.env.REACT_APP_API_KEY}&units=metric`
-		)
+		return fetch(url);
+	}
+
+	function handleResponse(res) {
+		return res
 			.then((res) => res.json())
 			.then((res) => {
-				handleWeather(res);
+				onWeather(res);
 				console.log(`Response ${JSON.stringify(res)}`);
 				if (res.message === "city not found") {
-					throw new Error(res.message);
+					// throw new Error(res.message);
 				} else if (res.message === "falied to fetch") {
-					throw new Error(res.message);
+					// throw new Error(res.message);
 				} else if (res.message === "Nothing to geocode") {
-					throw new Error(res.message);
+					// throw new Error(res.message);
 				} else {
-					handleError(null);
+					onError(null);
 					setQuery("");
+					onIsFetched(true);
 					setIsPending(false);
-					handleIsFetched(true);
 				}
 			})
 			.catch((err) => {
 				setIsPending(false);
-				handleError(true);
+				onError(true);
 				console.log("Error: " + err.message);
 			});
 	}
 
 	function handleSubmit(e) {
 		e.preventDefault();
-		fetchWeatherData();
+		handleWeatherData();
 	}
 
 	return (
-		<div className="search">
+		<form className="search" onSubmit={handleSubmit}>
 			<input
-				type="search"
+				type="text"
 				className="search__search-bar"
 				placeholder="Search..."
 				value={query}
 				onChange={(e) => setQuery(e.target.value)}
 			/>
-			<button
+			<input
+				type="submit"
 				disabled={isPending}
 				className="search__button"
-				onClick={handleSubmit}>
-				Search
-			</button>
-		</div>
+				value="Search"></input>
+		</form>
 	);
 }
